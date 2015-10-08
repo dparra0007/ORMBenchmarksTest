@@ -11,7 +11,7 @@ namespace ORMBenchmarksTest.Models
             : base(Constants.ConnectionString)
         {
             Database.SetInitializer<SportContext>(new DropCreateDatabaseAlways<SportContext>());
-            Database.Initialize(true);
+            //Database.Initialize(true);
         }
 
         public virtual DbSet<Player> Players { get; set; }
