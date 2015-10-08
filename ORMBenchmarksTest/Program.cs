@@ -29,7 +29,10 @@ namespace ORMBenchmarksTest
                 {
                     case 'Q':
                         break;
-
+                    case 'C':
+                        EntityFramework createEfTest = new EntityFramework();
+                        createEfTest.CreateDatabase();
+                        break;
                     case 'T':
                         List<TestResult> testResults = new List<TestResult>();
                         
@@ -133,6 +136,7 @@ namespace ORMBenchmarksTest
         {
             Console.WriteLine("Please enter one of the following options:");
             Console.WriteLine("Q - Quit");
+            Console.WriteLine("C - Create Database");
             Console.WriteLine("T - Run Test");
             Console.WriteLine("Option:");
         }

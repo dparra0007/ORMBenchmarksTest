@@ -47,5 +47,11 @@ namespace ORMBenchmarksTest.DataAccess
             watch.Stop();
             return watch.ElapsedMilliseconds;
         }
+
+        public void CreateDatabase()
+        {
+            try { SportContext context = new SportContext(); }
+            catch (Exception ex) { }
+        }
     }
 }

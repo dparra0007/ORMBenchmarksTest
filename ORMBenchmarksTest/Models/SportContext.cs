@@ -8,8 +8,10 @@ namespace ORMBenchmarksTest.Models
     public partial class SportContext : DbContext
     {
         public SportContext()
-            : base("name=Players")
+            : base(Constants.ConnectionString)
         {
+            Database.SetInitializer<SportContext>(new DropCreateDatabaseAlways<SportContext>());
+            Database.Initialize(true);
         }
 
         public virtual DbSet<Player> Players { get; set; }
@@ -23,10 +25,10 @@ namespace ORMBenchmarksTest.Models
                 .WithRequired(e => e.Sport)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Team>()
-                .HasMany(e => e.Players)
-                .WithRequired(e => e.Team)
-                .WillCascadeOnDelete(false);
+
+            modelBuilder.Configurations.Add(new PlayerMap());
+
+            modelBuilder.Configurations.Add(new TeamMap());
         }
     }
 }
