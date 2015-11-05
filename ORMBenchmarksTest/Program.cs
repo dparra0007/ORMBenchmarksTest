@@ -49,23 +49,17 @@ namespace ORMBenchmarksTest
                         Console.WriteLine("# of Players per Team: ");
                         NumPlayers = int.Parse(Console.ReadLine());
 
-
-                        List<SportDTO> sports = TestData.Generator.GenerateSports(NumSports);
-                        List<TeamDTO> teams = new List<TeamDTO>();
-                        List<PlayerDTO> players = new List<PlayerDTO>();
-                        foreach (var sport in sports)
+                        for (int i = 0; i < NumRuns; i++)
                         {
-                            var newTeams = TestData.Generator.GenerateTeams(sport.Id, NumTeams);
-                            teams.AddRange(newTeams);
-                            foreach (var team in newTeams)
-                            {
-                                var newPlayers = TestData.Generator.GeneratePlayers(team.Id, NumPlayers);
-                                players.AddRange(newPlayers);
-                            }
-                        }
+                            EntityFramework efTest = new EntityFramework();
+                            testResults.AddRange(RunInsertTest(i, Framework.EntityFramework, efTest));
 
-                        Database.Reset();
-                        Database.Load(sports, teams, players);
+                            ADONET adoTest = new ADONET();
+                            testResults.AddRange(RunInsertTest(i, Framework.ADONET, adoTest));
+
+                            //DataAccess.Dapper dapperTest = new DataAccess.Dapper();
+                            //testResults.AddRange(RunTests(i, Framework.Dapper, dapperTest));
+                        }
 
                         for (int i = 0; i < NumRuns; i++)
                         {
@@ -75,8 +69,8 @@ namespace ORMBenchmarksTest
                             ADONET adoTest = new ADONET();
                             testResults.AddRange(RunTests(i, Framework.ADONET, adoTest));
 
-                            DataAccess.Dapper dapperTest = new DataAccess.Dapper();
-                            testResults.AddRange(RunTests(i, Framework.Dapper, dapperTest));
+                            //DataAccess.Dapper dapperTest = new DataAccess.Dapper();
+                            //testResults.AddRange(RunTests(i, Framework.Dapper, dapperTest));
                         }
                         ProcessResults(testResults);
 
@@ -112,6 +106,21 @@ namespace ORMBenchmarksTest
                 teamsForSportResults.Add(testSignature.GetTeamsForSport(i));
             }
             result.TeamsForSportMilliseconds = Math.Round(teamsForSportResults.Average(), 2);
+            results.Add(result);
+
+            return results;
+        }
+
+        public static List<TestResult> RunInsertTest(int runID, Framework framework, ITestSignature testSignature)
+        {
+            List<TestResult> results = new List<TestResult>();
+
+            TestResult result = new TestResult() { Run = runID, Framework = framework };
+            //TODO
+            List<long> playerByIDResults = new List<long>();
+            playerByIDResults.Add(testSignature.Generate(NumSports, NumTeams, NumPlayers));
+            result.PlayerByIDMilliseconds = Math.Round(playerByIDResults.Average(), 2);
+            //TODO
             results.Add(result);
 
             return results;

@@ -11,5 +11,6 @@ namespace ORMBenchmarksTest.DataAccess
         long GetPlayerByID(int id);
         long GetPlayersForTeam(int teamID);
         long GetTeamsForSport(int sportID);
+        long Generate(int NumSports, int Numteams, int NumPlayers);
     }
 }
